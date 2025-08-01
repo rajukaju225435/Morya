@@ -8,7 +8,6 @@ import Stories from './pages/Stories';
 import MantrasPage from './components/Mantras';
 import PujaRoomPage from './components/PujaRoom';
 import GalleryPage from './components/Gallery';
-import "./Index.css"
 import About from './components/About';
 import Blessings from './components/Blessings';
 function AnimatedRoutes() {
