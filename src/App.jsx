@@ -10,6 +10,7 @@ import PujaRoomPage from './components/PujaRoom';
 import GalleryPage from './components/Gallery';
 import About from './components/About';
 import Blessings from './components/Blessings';
+import ScrollToTop from "./components/ScrollToTop";
 function AnimatedRoutes() {
   const location = useLocation();
   
@@ -32,7 +33,7 @@ function AnimatedRoutes() {
 function App() {
   return (
     <ParallaxProvider>
-      <Router>
+      <Router> <ScrollToTop />
         <AnimatedRoutes />
       </Router>
     </ParallaxProvider>

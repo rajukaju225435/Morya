@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import ganeshVideo from "../assets/video/ganeshji.mp4";
 
 const Landing = () => {
   const [showButton, setShowButton] = useState(false);
@@ -131,7 +132,7 @@ const Landing = () => {
             playsInline
             className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 object-cover"
           >
-            <source src="/src/assets/video/ganeshji.mp4" type="video/mp4" />
+            <source src={ganeshVideo} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
 

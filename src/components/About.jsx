@@ -7,6 +7,7 @@ import {
 } from "framer-motion";
 import { Parallax } from "react-scroll-parallax";
 import Navbar from "./Navbar";
+import BackToHomeButton from "./BackToHomeButton";
 
 const About = () => {
   const containerRef = useRef(null);
@@ -110,6 +111,7 @@ const About = () => {
       className="min-h-screen relative py-20 overflow-hidden bg-black "
     >
       <Navbar />
+
       {/* Animated Background */}
       <motion.div
         className="fixed inset-0 bg-gradient-to-br from-[#FF6B00]/5 via-transparent to-[#FFD700]/5"
@@ -119,14 +121,14 @@ const About = () => {
       {/* Floating Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          className="absolute top-20 right-60 text-[30px] text-[#FF6B00]"
+          className="absolute top-100 right-60 text-[30px] text-[#FF6B00]"
           animate={{ rotate: 360 }}
           transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
         >
           ॐ
         </motion.div>
         <motion.div
-          className="absolute top-20 left-60 text-[30px] text-[#FFD700]"
+          className="absolute top-100 left-60 text-[30px] text-[#FFD700]"
           animate={{ rotate: -360 }}
           transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
         >
@@ -134,20 +136,16 @@ const About = () => {
         </motion.div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mt-20 mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Title Section with Animation */}
+        <BackToHomeButton  className/>
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-6xl mb-4"
-          ></motion.div>
+       
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
             <span className="bg-gradient-to-r from-[#FFD700] via-[#FF6B00] to-[#DC143C] bg-clip-text text-transparent animate-gradient">
               About Lord Ganesha
