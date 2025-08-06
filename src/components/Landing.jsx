@@ -5,7 +5,7 @@ import ganeshVideo from "../assets/video/ganeshji.mp4";
 import wooshSound from "../assets/audio/woosh.mp3";
 import ganeshaMusic from "../assets/audio/ganesha-intro.mp3";
 import MouseLoader from "./MouseLoader";
-
+import hoverSound from "../assets/audio/btnhover.mp3";
 const Landing = () => {
   const [showButton, setShowButton] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
@@ -14,11 +14,9 @@ const Landing = () => {
   const [audioAllowed, setAudioAllowed] = useState(false);
   const [muted, setMuted] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
-  
-  // Audio refs
   const bgAudioRef = useRef(null);
   const wooshRef = useRef(null);
-
+  const hoverSoundRef = useRef(null);
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowButton(true);
@@ -27,7 +25,6 @@ const Landing = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Cleanup function to stop all audio
   const stopAllAudio = () => {
     if (bgAudioRef.current) {
       bgAudioRef.current.pause();
@@ -37,23 +34,35 @@ const Landing = () => {
       wooshRef.current.pause();
       wooshRef.current.currentTime = 0;
     }
+    if (hoverSoundRef.current) {
+      hoverSoundRef.current.pause();
+
+      hoverSoundRef.current.currentTime = 0;
+    }
   };
 
   const handleEnter = () => {
-    // stopAllAudio(); // Stop all audio before navigation
     if (wooshRef.current) {
-      wooshRef.current.play().catch(err => console.log("Woosh play error:", err));
+      wooshRef.current
+        .play()
+        .catch((err) => console.log("Woosh play error:", err));
     }
     setShowLoader(true);
   };
+  const handleButtonHover = () => {
+    if (hoverSoundRef.current) {
+      hoverSoundRef.current.currentTime = 0;
+      hoverSoundRef.current
+        .play()
+        .catch((err) => console.log("Hover sound play error:", err));
+    }
+  };
 
-  // Handle loader finish
   const handleLoaderFinish = () => {
-    stopAllAudio(); // Ensure audio is stopped before navigation
+    stopAllAudio();
     navigate("/home");
   };
 
-  // Animation variants (same as before)
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -147,24 +156,26 @@ const Landing = () => {
 
   useEffect(() => {
     const allowedBefore = localStorage.getItem("audioAllowed") === "true";
-    
+
     if (allowedBefore) {
       bgAudioRef.current = new Audio(ganeshaMusic);
       bgAudioRef.current.loop = true;
       bgAudioRef.current.volume = 0.5;
-      bgAudioRef.current.play().then(() => {
-        setAudioAllowed(true);
-      }).catch(() => {
-        setAudioAllowed(false);
-      });
+      bgAudioRef.current
+        .play()
+        .then(() => {
+          setAudioAllowed(true);
+        })
+        .catch(() => {
+          setAudioAllowed(false);
+        });
     } else {
       setAudioAllowed(false);
     }
-
     wooshRef.current = new Audio(wooshSound);
     wooshRef.current.volume = 0.8;
-
-    // Cleanup on component unmount
+    hoverSoundRef.current = new Audio(hoverSound);
+    hoverSoundRef.current.volume = 0.3;
     return () => {
       stopAllAudio();
     };
@@ -176,13 +187,16 @@ const Landing = () => {
       bgAudioRef.current.loop = true;
       bgAudioRef.current.volume = 0.5;
     }
-    
-    bgAudioRef.current.play().then(() => {
-      setAudioAllowed(true);
-      localStorage.setItem("audioAllowed", "true");
-    }).catch(err => {
-      console.warn("Autoplay blocked:", err);
-    });
+
+    bgAudioRef.current
+      .play()
+      .then(() => {
+        setAudioAllowed(true);
+        localStorage.setItem("audioAllowed", "true");
+      })
+      .catch((err) => {
+        console.warn("Autoplay blocked:", err);
+      });
   };
 
   const toggleMute = () => {
@@ -192,7 +206,6 @@ const Landing = () => {
     }
   };
 
-  // Stop audio when component unmounts or navigates away
   useEffect(() => {
     return () => {
       stopAllAudio();
@@ -210,7 +223,6 @@ const Landing = () => {
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.8 }}
           >
-            {/* Background Video */}
             <video
               autoPlay
               muted
@@ -221,7 +233,7 @@ const Landing = () => {
               <source src={ganeshVideo} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
-            
+
             <div className="absolute top-5 left-5 z-50 flex gap-3">
               {!audioAllowed && (
                 <motion.button
@@ -244,8 +256,6 @@ const Landing = () => {
                 </motion.button>
               )}
             </div>
-            
-            {/* Animated Gradient Overlay */}
             <motion.div
               className="absolute inset-0"
               animate={{
@@ -257,8 +267,6 @@ const Landing = () => {
               }}
               transition={{ duration: 5, repeat: Infinity }}
             />
-
-            {/* Particle Effects */}
             <div className="absolute inset-0 overflow-hidden">
               {[...Array(20)].map((_, i) => (
                 <motion.div
@@ -282,18 +290,16 @@ const Landing = () => {
                 />
               ))}
             </div>
-
-            {/* Content Overlay */}
             <motion.div
-              className="relative h-screen flex flex-col justify-center items-center z-10 px-4"
+              className="relative h-screen flex flex-col justify-center items-center z-10 px-4 mt-60"
               variants={containerVariants}
               initial="hidden"
               animate="visible"
             >
-              {/* Sanskrit Mantra */}
-              <motion.div variants={titleVariants} className="text-center mb-8">
+              {" "}
+              <motion.div variants={titleVariants} className="text-center mt-8">
                 <motion.h1
-                  className="text-4xl md:text-5xl text-primary-gold font-light mb-2"
+                  className="text-4xl md:text-5xl text-black font-bold mb-2"
                   animate={{
                     textShadow: [
                       "0 0 20px rgba(255,215,0,0.5)",
@@ -305,17 +311,7 @@ const Landing = () => {
                 >
                   ॥ श्री गणेशाय नमः ॥
                 </motion.h1>
-                <motion.p
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 1, duration: 0.8 }}
-                  className="text-sm md:text-base text-primary-gold/70"
-                >
-                  Shri Ganeshaya Namah
-                </motion.p>
               </motion.div>
-
-              {/* Main Title with Letter Animation */}
               <motion.div
                 variants={subtitleVariants}
                 className="text-center mb-12"
@@ -342,8 +338,6 @@ const Landing = () => {
                     </motion.span>
                   ))}
                 </h2>
-
-                {/* Subtitle */}
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -353,8 +347,6 @@ const Landing = () => {
                   Experience the divine blessings of Lord Ganesha
                 </motion.p>
               </motion.div>
-
-              {/* Animated Button */}
               <AnimatePresence>
                 {showButton && (
                   <motion.div
@@ -368,7 +360,6 @@ const Landing = () => {
                     }}
                     className="relative"
                   >
-                    {/* Button Glow Effect */}
                     <motion.div
                       className="absolute inset-0 bg-gradient-to-r from-primary-orange to-accent-red rounded-full blur-xl"
                       animate={{
@@ -377,8 +368,6 @@ const Landing = () => {
                       }}
                       transition={{ duration: 2, repeat: Infinity }}
                     />
-
-                    {/* Main Button */}
                     <motion.button
                       whileHover={{
                         scale: 1.05,
@@ -393,6 +382,7 @@ const Landing = () => {
                         transition: "background-position 0.5s ease",
                       }}
                       onMouseEnter={(e) => {
+                        handleButtonHover();
                         e.target.style.backgroundPosition = "100% 0%";
                       }}
                       onMouseLeave={(e) => {
@@ -408,8 +398,6 @@ const Landing = () => {
                           →
                         </motion.span>
                       </span>
-
-                      {/* Button Shimmer Effect */}
                       <motion.div
                         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
                         animate={{
@@ -425,8 +413,6 @@ const Landing = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
-
-                            {/* Floating Om Symbols */}
               <motion.div
                 className="absolute top-10 right-10 text-5xl text-primary-gold/30"
                 variants={floatingAnimation}
@@ -434,7 +420,6 @@ const Landing = () => {
               >
                 ॐ
               </motion.div>
-
               <motion.div
                 className="absolute bottom-20 left-10 text-4xl text-primary-gold/20"
                 variants={floatingAnimation}
@@ -443,7 +428,7 @@ const Landing = () => {
               >
                 ॐ
               </motion.div>
-
+              {/* 
               <motion.div
                 className="absolute top-1/3 left-20 text-3xl text-primary-gold/25"
                 variants={pulseAnimation}
@@ -459,9 +444,7 @@ const Landing = () => {
                 style={{ animationDelay: "1.5s" }}
               >
                 🪔
-              </motion.div>
-
-              {/* Bottom Decorative Line */}
+              </motion.div> */}
               <motion.div
                 className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
                 initial={{ width: 0, opacity: 0 }}

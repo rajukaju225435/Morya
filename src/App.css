@@ -108,3 +108,11 @@
     rgba(239, 68, 68, 0.1) 100%
   );
 }
+
+button{
+  cursor: pointer;
+}
+
+.motion-btn {
+  cursor: pointer;
+}
